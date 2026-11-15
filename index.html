@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crisp Gate Invite — Love & Budget Screening System</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --border-color: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-rose: #f43f5e;
+            --accent-emerald: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Step 1: Envelope */
+        .envelope-container {
+            text-align: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 50px 30px;
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .envelope-container:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-rose);
+        }
+
+        .envelope-icon {
+            font-size: 70px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
+        .envelope-container h1 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .envelope-container p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Step 2 & 3 Boxes */
+        .box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .box h2 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .box p.subtitle {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 6px;
+            margin-top: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 11px 14px;
+            background: #0b0f19;
+            border: 1px solid var(--border-color);
+            color: #fff;
+            border-radius: 8px;
+            font-size: 0.95krem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--accent-rose);
+        }
+
+        .btn {
+            background-color: var(--accent-rose);
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-top: 24px;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .error {
+            color: #f87171;
+            font-size: 0.85rem;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        /* Invite Success Card */
+        .invite-success {
+            text-align: center;
+        }
+
+        .invite-success h2 {
+            color: var(--accent-emerald);
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+        }
+
+        .invite-details {
+            background: #0b0f19;
+            border: 1px dashed var(--border-color);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        .invite-details p {
+            margin-bottom: 8px;
+            color: #cbd5e1;
+        }
+
+        .invite-details span {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .disclaimer {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- STEP 1: Click to Open Envelope -->
+    <div class="envelope-container" id="envStep" onclick="openEnvelope()">
+        <div class="envelope-icon">💌</div>
+        <h1>You've Got a Gate Invite!</h1>
+        <p>Click here to break the seal, answer the screening test, and open your digital invitation.</p>
+    </div>
+
+    <!-- STEP 2: Identity Verification & Q&A Screening -->
+    <div class="box hidden" id="quizStep">
+        <h2>💍 Guest Verification & Budget Gate</h2>
+        <p class="subtitle">Bago mabuksan ang detalye, kailangan munang pumasa sa compatibility at financial check.</p>
+        
+        <label>Buong Pangalan:</label>
+        <input type="text" id="fullName" placeholder="Juan Dela Cruz">
+
+        <label>Email Address (Para sa Official Pass):</label>
+        <input type="email" id="email" placeholder="juan@example.com">
+
+        <label>Phone Number / GCash No.:</label>
+        <input type="tel" id="phone" placeholder="09123456789">
+
+        <label>1. Magkano ang balak mong ilagay sa sobre / regalo?</label>
+        <select id="budgetChoice">
+            <option value="0">Pili ng halaga...</option>
+            <option value="50">₱50 lang (Pang-kape lang)</option>
+            <option value="500">₱500 (Sakto sa ambag ko)</option>
+            <option value="2000">₱2,000+ (Para sa kinabukasan!)</option>
+        </select>
+
+        <label>2. Kung umabot sa ₱1,500 ang gastusin/bill, magkano ang share mo?</label>
+        <input type="number" id="billShare" placeholder="Ilagay ang halaga sa Pesos (₱)">
+
+        <button class="btn" onclick="checkAnswers()">Submit & Verify Identity</button>
+        <div class="error" id="errorMsg"></div>
+    </div>
+
+    <!-- STEP 3: Successful Pass & Official Invite Details -->
+    <div class="box invite-success hidden" id="inviteStep">
+        <h2>🎉 Pasado Ka, <span id="displayName"></span>!</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Opisyal nang tinanggap ang iyong sagot at rehistro.</p>
+        
+        <div class="invite-details">
+            <p><strong>Event:</strong> Grand Wedding & Date Celebration</p>
+            <p><strong>Venue:</strong> Secret Garden Café & Events Place</p>
+            <p><strong>Registered Email:</strong> <span id="displayEmail"></span></p>
+            <p><strong>Committed Share/Gift:</strong> <span id="confirmedShare"></span></p>
+        </div>
+
+        <p class="disclaimer">*Naka-save na ang record mo sa Crisp Gate Invite system. Walang atrasan sa date o kasal! Hahaha.*</p>
+    </div>
+
+</div>
+
+<script src="./repo.js"></script>
+<script>
+    function openEnvelope() {
+        document.getElementById('envStep').classList.add('hidden');
+        document.getElementById('quizStep').classList.remove('hidden');
+    }
+
+    function checkAnswers() {
+        let name = document.getElementById('fullName').value.trim();
+        let email = document.getElementById('email').value.trim();
+        let phone = document.getElementById('phone').value.trim();
+        let budget = parseInt(document.getElementById('budgetChoice').value);
+        let share = parseInt(document.getElementById('billShare').value);
+        let errorDiv = document.getElementById('errorMsg');
+
+        if (!name || !email || !phone) {
+            errorDiv.innerText = "⚠️ Paki-fill up ang lahat ng personal info (Name, Email, Phone).";
+            return;
+        }
+        if (budget === 0 || budget === 50) {
+            errorDiv.innerText = "⚠️ Lugi ang ikakasal o ang date mo sa ganyang halaga! Taasan mo naman.";
+            return;
+        }
+        if (isNaN(share) || share < 500) {
+            errorDiv.innerText = "⚠️ Kuripot alert! Ang minimum expected share ay ₱500 para makapasa.";
+            return;
+        }
+
+        // Kung pasado lahat
+        document.getElementById('quizStep').classList.add('hidden');
+        document.getElementById('displayName').innerText = name;
+        document.getElementById('displayEmail').innerText = email;
+        document.getElementById('confirmedShare').innerText = "₱" + share + " (Accepted & Locked)";
+        document.getElementById('inviteStep').classList.remove('hidden');
+    }
+</script>
+</body>
+</html>
