@@ -422,10 +422,10 @@
             renderQuestion();
         }
 
-        function renderQuestion() {
-            document.getElementById('errorMsginnerText = ""');
+                function renderQuestion() {
             document.getElementById('errorMsg').innerText = '';
             document.getElementById('btnBack').classList.toggle('hidden', step === 1);
+
             
             const totalSteps = 5;
             document.getElementById('stepIndicator').innerText = `Step ${step} of ${totalSteps} • ${mode.toUpperCase()}`;
