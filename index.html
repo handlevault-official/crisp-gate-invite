@@ -525,6 +525,11 @@
                 document.getElementById('resVenue').innerText = "Skyline Lounge, BGC (7:00 PM)";
             }
 
+            <!-- Dito nagtatapos ang UI / HTML elements mo -->
+            
+    <!-- 1. Dito mo nilagay ang function mo directly sa index.html -->
+    <script>
+        function showSuccess() {
             document.getElementById('resName').innerText = userData.name;
             document.getElementById('resShare').innerText = `₱${parseInt(userData.share).toLocaleString()} (Locked)`;
             document.getElementById('resCode').innerText = 'CRISP-' + Math.random().toString(36).substring(2, 7).toUpperCase();
@@ -532,5 +537,8 @@
             document.getElementById('stepPass').classList.remove('hidden');
         }
     </script>
+
+    <!-- 2. Script para ikonekta ang logic mula sa repo.js -->
+    <script src="repo.js"></script>
 </body>
 </html>
