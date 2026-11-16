@@ -3,16 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crisp Gate Invite — Ultimate VIP Screening</title>
+    <title>Crisp Suite — Special Invite Gate</title>
     <link rel="manifest" href="./manifest.json">
-    <meta name="theme-color" content="#07050a">
+    <meta name="theme-color" content="#f8fafc">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
+            --bg-main: #f1f5f9;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --gold: #d97706;
+            --gold-light: #fbbf24;
+            --rose: #e11d48;
+            --rose-glow: rgba(225, 29, 72, 0.25);
+            --emerald: #059669;
+            --border: rgba(0, 0, 0, 0.1);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --input-bg: rgba(241, 245, 249, 0.9);
+        }
+
+        [data-theme="dark"] {
             --bg-main: #07050a;
             --card-bg: rgba(20, 16, 28, 0.85);
-            --gold: #eab308;
-            --gold-light: #fef08a;
+            --gold: #f59e0b;
+            --gold-light: #fde68a;
             --rose: #f43f5e;
             --rose-glow: rgba(244, 63, 94, 0.4);
             --emerald: #10b981;
@@ -20,20 +34,6 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --input-bg: rgba(7, 5, 10, 0.7);
-        }
-
-        [data-theme="light"] {
-            --bg-main: #f8fafc;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --gold: #ca8a04;
-            --gold-light: #854d0e;
-            --rose: #e11d48;
-            --rose-glow: rgba(225, 29, 72, 0.2);
-            --emerald: #059669;
-            --border: rgba(0, 0, 0, 0.12);
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --input-bg: rgba(241, 245, 249, 0.9);
         }
 
         * {
@@ -57,11 +57,17 @@
 
         .hidden { display: none !important; }
 
-        /* Theme Toggle Button */
-        .theme-toggle {
+        /* Top Controls Container */
+        .controls {
             position: fixed;
             top: 20px;
             right: 20px;
+            display: flex;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .control-btn {
             background: var(--card-bg);
             border: 1px solid var(--border);
             color: var(--text-main);
@@ -71,10 +77,9 @@
             font-size: 0.8rem;
             font-weight: 700;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            z-index: 100;
         }
 
-        /* --- STEP 1: 3D ENVELOPE --- */
+        /* --- STEP 1: 3D WHITE & GOLD ENVELOPE --- */
         .envelope-wrapper {
             perspective: 1000px;
             cursor: pointer;
@@ -85,13 +90,17 @@
             position: relative;
             width: 340px;
             height: 230px;
-            background: linear-gradient(135deg, #2a1829, #160d18);
-            border: 1px solid rgba(234, 179, 8, 0.35);
+            background: linear-gradient(135deg, #ffffff, #e2e8f0);
+            border: 1px solid rgba(217, 119, 6, 0.4);
             border-radius: 12px;
             margin: 0 auto 25px auto;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(244, 63, 94, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2), 0 0 30px rgba(251, 191, 36, 0.25);
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             overflow: hidden;
+        }
+
+        [data-theme="dark"] .envelope {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
         }
 
         .envelope-wrapper:hover .envelope {
@@ -103,34 +112,44 @@
             top: 0; left: 0; width: 0; height: 0;
             border-left: 170px solid transparent;
             border-right: 170px solid transparent;
-            border-top: 130px solid #381e36;
+            border-top: 130px solid #cbd5e1;
             transform-origin: top;
             transition: transform 0.6s ease;
             z-index: 3;
+        }
+
+        [data-theme="dark"] .flap {
+            border-top-color: #334155;
         }
 
         .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
 
         .pocket {
             position: absolute; bottom: 0; left: 0; width: 0; height: 0;
-            border-left: 170px solid #221321;
-            border-right: 170px solid #221321;
-            border-bottom: 115px solid #2c182b;
+            border-left: 170px solid #ffffff;
+            border-right: 170px solid #ffffff;
+            border-bottom: 115px solid #cbd5e1;
             border-top: 115px solid transparent;
             z-index: 2;
+        }
+
+        [data-theme="dark"] .pocket {
+            border-left-color: #1e293b;
+            border-right-color: #1e293b;
+            border-bottom-color: #334155;
         }
 
         .wax-seal {
             position: absolute; top: 95px; left: 50%;
             transform: translateX(-50%);
-            width: 64px; height: 64px;
-            background: radial-gradient(circle at 30% 30%, #fb7185, #be123c);
-            border: 2px solid var(--gold);
+            width: 68px; height: 68px;
+            background: radial-gradient(circle at 30% 30%, #fbbf24, #d97706);
+            border: 2px solid #fff;
             border-radius: 50%;
             z-index: 4;
             display: flex; justify-content: center; align-items: center;
-            font-size: 26px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            font-size: 28px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
@@ -146,7 +165,7 @@
 
         .env-sub { font-size: 0.85rem; color: var(--text-muted); }
 
-        /* --- STEP 2: STEP-BY-STEP SCREENING CARD --- */
+        /* --- STEP 2: GATE CARD --- */
         .gate-card {
             width: 100%;
             max-width: 480px;
@@ -155,7 +174,7 @@
             border: 1px solid var(--border);
             border-radius: 20px;
             padding: 32px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
             animation: slideUp 0.5s ease forwards;
         }
 
@@ -181,13 +200,13 @@
             color: var(--text-muted);
             padding: 9px;
             border-radius: 8px;
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             font-weight: 700;
             cursor: pointer;
         }
 
         .mode-btn.active {
-            background: linear-gradient(135deg, var(--rose), #be123c);
+            background: linear-gradient(135deg, var(--gold), var(--rose));
             color: #fff;
             box-shadow: 0 4px 12px var(--rose-glow);
         }
@@ -246,7 +265,7 @@
         }
 
         .btn-next {
-            background: linear-gradient(135deg, var(--rose), #e11d48);
+            background: linear-gradient(135deg, var(--gold), var(--rose));
             color: #fff;
             box-shadow: 0 8px 20px var(--rose-glow);
         }
@@ -258,14 +277,14 @@
         }
 
         .error-text {
-            color: var(--rose);
+            color: #e11d48;
             font-size: 0.82rem;
             margin-top: 10px;
             font-weight: 600;
             text-align: center;
         }
 
-        /* --- STEP 3: EPIC SUCCESS PASS + ANIMATIONS --- */
+        /* --- STEP 3: SUCCESS PASS --- */
         .vip-pass {
             width: 100%;
             max-width: 460px;
@@ -273,7 +292,7 @@
             border: 2px solid var(--gold);
             border-radius: 24px;
             padding: 32px;
-            box-shadow: 0 25px 60px rgba(234, 179, 8, 0.2);
+            box-shadow: 0 25px 60px rgba(217, 119, 6, 0.2);
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -327,42 +346,45 @@
         .btn-action {
             width: 100%;
             padding: 13px;
-            background: linear-gradient(135deg, var(--gold), #ca8a04);
-            color: #07050a;
+            background: linear-gradient(135deg, var(--gold), var(--rose));
+            color: #fff;
             border: none;
             border-radius: 12px;
             font-weight: 800;
             font-size: 0.95rem;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(234, 179, 8, 0.3);
+            box-shadow: 0 8px 20px rgba(217, 119, 6, 0.3);
         }
     </style>
 </head>
-<body data-theme="dark">
+<body data-theme="light">
 
-    <button class="theme-toggle" onclick="toggleTheme()">☀️ / 🌙 Theme</button>
+    <div class="controls">
+        <button class="control-btn" onclick="toggleLang()" id="langBtn">🇵🇭 Tagalog</button>
+        <button class="control-btn" onclick="toggleTheme()">☀️ / 🌙</button>
+    </div>
 
-    <!-- STEP 1: 3D ENVELOPE -->
+    <!-- STEP 1: 3D WHITE & GOLD ENVELOPE -->
     <div class="envelope-wrapper" id="stepEnvelope" onclick="openEnvelope()">
         <div class="envelope" id="envelopeObj">
             <div class="flap"></div>
             <div class="pocket"></div>
             <div class="wax-seal">💌</div>
         </div>
-        <div class="env-prompt">VIP INVITATION GATE</div>
-        <div class="env-sub">Tap wax seal to open encrypted envelope</div>
+        <div class="env-prompt" data-i18n="envPrompt">SPECIAL INVITATION</div>
+        <div class="env-sub" data-i18n="envSub">Tap wax seal to open your invite envelope</div>
     </div>
 
-    <!-- STEP 2: ONE QUESTION AT A TIME GATE -->
+    <!-- STEP 2: STEP-BY-STEP SCREENING CARD -->
     <div class="gate-card hidden" id="stepGate">
         <div class="mode-tabs">
-            <button class="mode-btn active" id="tabWedding" onclick="switchMode('wedding')">💍 Wedding Invite</button>
-            <button class="mode-btn" id="tabDate" onclick="switchMode('date')">🍷 Date Night</button>
+            <button class="mode-btn active" id="tabParty" onclick="switchMode('party')">🎈 Birthday / Baby</button>
+            <button class="mode-btn" id="tabWedding" onclick="switchMode('wedding')">💍 Wedding / Date</button>
         </div>
 
-        <div class="step-indicator" id="stepIndicator">Question 1 of 5</div>
-        <div class="question-title" id="qTitle">Anong Pangalan Mo?</div>
-        <div class="question-desc" id="qDesc">Ilagay ang iyong buong pangalan para sa opisyal na guestlist.</div>
+        <div class="step-indicator" id="stepIndicator">Step 1 of 4</div>
+        <div class="question-title" id="qTitle">Guest Full Name?</div>
+        <div class="question-desc" id="qDesc">Ilagay ang iyong buong pangalan para sa RSVP pass.</div>
 
         <div class="form-group" id="inputContainer">
             <!-- Dynamically injected input per question -->
@@ -371,39 +393,124 @@
         <div class="error-text" id="errorMsg"></div>
 
         <div class="btn-group">
-            <button class="btn-back hidden" id="btnBack" onclick="prevStep()">Bumalik</button>
-            <button class="btn-next" id="btnNext" onclick="nextStep()">Susunod ➔</button>
+            <button class="btn-back hidden" id="btnBack" onclick="prevStep()" data-i18n="btnBack">Back</button>
+            <button class="btn-next" id="btnNext" onclick="nextStep()" data-i18n="btnNext">Next ➔</button>
         </div>
     </div>
 
-    <!-- STEP 3: SUCCESS PASS (CONGRATS / WE'RE MATCHED) -->
+    <!-- STEP 3: SUCCESS PASS -->
     <div class="vip-pass hidden" id="stepPass">
-        <div class="success-icon" id="successEmoji">🎉</div>
-        <h2 id="successHeader">Congratulations! You Can Attend</h2>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;" id="successSub">Na-verify ang iyong sagot at rehistro.</p>
+        <div class="success-icon">🎟️</div>
+        <h2 data-i18n="successHeader">RSVP Confirmed!</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;" data-i18n="successSub">Naitala na ang iyong pagdalo sa okasyon.</p>
 
         <div class="ticket-box">
-            <div class="ticket-row"><span class="t-label">Guest Name:</span><span class="t-val" id="resName"></span></div>
-            <div class="ticket-row"><span class="t-label">Event Type:</span><span class="t-val" id="resEvent"></span></div>
-            <div class="ticket-row"><span class="t-label">Secret Venue:</span><span class="t-val" id="resVenue"></span></div>
-            <div class="ticket-row"><span class="t-label">Committed Share:</span><span class="t-val" style="color: var(--emerald);" id="resShare"></span></div>
-            <div class="ticket-row"><span class="t-label">Access Pass:</span><span class="t-val" style="color: var(--gold);" id="resCode"></span></div>
+            <div class="ticket-row"><span class="t-label" data-i18n="lblGuest">Guest:</span><span class="t-val" id="resName"></span></div>
+            <div class="ticket-row"><span class="t-label" data-i18n="lblEvent">Event Type:</span><span class="t-val" id="resEvent"></span></div>
+            <div class="ticket-row"><span class="t-label" data-i18n="lblSeats">Reserved Seats:</span><span class="t-val" id="resSeats"></span></div>
+            <div class="ticket-row"><span class="t-label" data-i18n="lblStatus">Status:</span><span class="t-val" style="color: var(--emerald);" id="resStatus"></span></div>
+            <div class="ticket-row"><span class="t-label" data-i18n="lblCode">Invitation Pass:</span><span class="t-val" style="color: var(--gold);" id="resCode"></span></div>
         </div>
 
-        <button class="btn-action" onclick="alert('✅ Pass saved successfully! I-screenshot o i-send na ito.')">✨ Copy / Save VIP Pass</button>
+        <button class="btn-action" onclick="alert('✅ Invitation Pass saved successfully!')" data-i18n="btnSave">✨ Save Guest Invite Pass</button>
     </div>
 
-    <script src="./repo.js"></script>
     <script>
-        let currentTheme = 'dark';
+        // Multi-language dictionary
+        const langData = {
+            en: {
+                envPrompt: "SPECIAL INVITATION",
+                envSub: "Tap wax seal to open your invite envelope",
+                btnBack: "Back",
+                btnNext: "Next ➔",
+                successHeader: "RSVP Confirmed!",
+                successSub: "Your attendance has been successfully recorded.",
+                lblGuest: "Guest:",
+                lblEvent: "Event Type:",
+                lblSeats: "Reserved Seats:",
+                lblStatus: "Status:",
+                lblCode: "Invitation Pass:",
+                btnSave: "✨ Save Guest Invite Pass",
+                stepsParty: [
+                    { title: "Guest Full Name?", desc: "Enter your full name for the guest list.", placeholder: "Alex Santos" },
+                    { title: "Event Celebration Type?", desc: "Select which joyous occasion you are attending.", options: [
+                        {val: "Kids Birthday Party", text: "Kids Birthday Party 🎈"},
+                        {val: "Baby Shower Celebration", text: "Baby Shower Celebration 🍼"}
+                    ]},
+                    { title: "Number of Attending Guests?", desc: "How many people are coming with you?", placeholder: "Hal. 2 Adults, 1 Kid" },
+                    { title: "Special Dietary / Notes?", desc: "Any allergies or gift messages?", placeholder: "None / Best wishes!" }
+                ],
+                stepsWedding: [
+                    { title: "Guest Full Name?", desc: "Enter your name as written on the invitation.", placeholder: "Maria Clara" },
+                    { title: "Ceremony & Date Type?", desc: "Select the formal event you are joining.", options: [
+                        {val: "Wedding Ceremony & Reception", text: "Wedding Ceremony & Reception 💍"},
+                        {val: "Special Romantic Date Night", text: "Special Romantic Date Night 🌹"}
+                    ]},
+                    { title: "Table Seating Preference?", desc: "Choose your preferred seating group.", placeholder: "Family / Friends" },
+                    { title: "Confirmation Passcode?", desc: "Enter your RSVP code from the invite.", placeholder: "VIP-2026" }
+                ]
+            },
+            tl: {
+                envPrompt: "SPECIAL INVITATION",
+                envSub: "I-tap ang wax seal para buksan ang iyong imbitasyon",
+                btnBack: "Bumalik",
+                btnNext: "Susunod ➔",
+                successHeader: "Kumpirmado ang RSVP Mo!",
+                successSub: "Naitala na ang iyong pagdalo sa masayang okasyon.",
+                lblGuest: "Bisita:",
+                lblEvent: "Uri ng Okasyon:",
+                lblSeats: "Bilang ng Upuan:",
+                lblStatus: "Katayuan:",
+                lblCode: "Invitation Pass:",
+                btnSave: "✨ I-save ang Invite Pass",
+                stepsParty: [
+                    { title: "Buong Pangalan ng Bisita?", desc: "Ilagay ang iyong pangalan para sa listahan.", placeholder: "Alex Santos" },
+                    { title: "Uri ng Pagdiriwang?", desc: "Piliin kung saang party ka dadalo.", options: [
+                        {val: "Kids Birthday Party", text: "Birthday Party ng Bata 🎈"},
+                        {val: "Baby Shower Celebration", text: "Baby Shower Celebration 🍼"}
+                    ]},
+                    { title: "Ilan kayong Dadalo?", desc: "Ilan ang kasama mong pumunta?", placeholder: "Hal. 2 Matanda, 1 Bata" },
+                    { title: "May Alerhiya o Mensahe ba?", desc: "Mensahe para sa celebrant o notes.", placeholder: "Wala / Happy Birthday!" }
+                ],
+                stepsWedding: [
+                    { title: "Buong Pangalan ng Bisita?", desc: "Ilagay ang iyong pangalan ayon sa imbitasyon.", placeholder: "Maria Clara" },
+                    { title: "Uri ng Pormal na Event?", desc: "Piliin ang okasyong iyong dadaluhan.", options: [
+                        {val: "Wedding Ceremony & Reception", text: "Kasal at Pagtanggap (Wedding) 💍"},
+                        {val: "Special Romantic Date Night", text: "Espesyal na Date Night 🌹"}
+                    ]},
+                    { title: "Saan mo gustong umupo?", desc: "Piliin ang iyong preferred seating group.", placeholder: "Pamilya / Kaibigan" },
+                    { title: "Confirmation Passcode?", desc: "Ilagay ang RSVP code na nakalagay sa invite.", placeholder: "VIP-2026" }
+                ]
+            }
+        };
+
+        let currentLang = 'en';
+        let currentTheme = 'light';
+        let mode = 'party'; // party or wedding
+        let step = 1;
+        let inviteDataUser = { name: '', eventType: '', seats: '' };
+
+        function toggleLang() {
+            currentLang = currentLang === 'en' ? 'tl' : 'en';
+            document.getElementById('langBtn').innerText = currentLang === 'en' ? '🇵🇭 Tagalog' : '🇬🇧 English';
+            updateStaticText();
+            if (document.getElementById('stepGate').classList.contains('hidden') === false) {
+                renderQuestion();
+            }
+        }
+
         function toggleTheme() {
-            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
             document.body.setAttribute('data-theme', currentTheme);
         }
 
-        let mode = 'wedding'; // wedding or date
-        let step = 1;
-        let userData = { name: '', email: '', phone: '', q1: '', share: 0 };
+        function updateStaticText() {
+            const dict = langData[currentLang];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) el.innerText = dict[key];
+            });
+        }
 
         function openEnvelope() {
             document.getElementById('envelopeObj').classList.add('open');
@@ -414,58 +521,46 @@
             }, 600);
         }
 
+        
         function switchMode(selectedMode) {
             mode = selectedMode;
             step = 1;
+            document.getElementById('tabParty').classList.toggle('active', mode === 'party');
             document.getElementById('tabWedding').classList.toggle('active', mode === 'wedding');
-            document.getElementById('tabDate').classList.toggle('active', mode === 'date');
             renderQuestion();
         }
 
-                function renderQuestion() {
+        function renderQuestion() {
             document.getElementById('errorMsg').innerText = '';
             document.getElementById('btnBack').classList.toggle('hidden', step === 1);
-
             
-            const totalSteps = 5;
-            document.getElementById('stepIndicator').innerText = `Step ${step} of ${totalSteps} • ${mode.toUpperCase()}`;
+            const dict = langData[currentLang];
+            const stepsList = mode === 'party' ? dict.stepsParty : dict.stepsWedding;
+            const qData = stepsList[step - 1];
 
-            let title = '', desc = '', html = '';
+            document.getElementById('stepIndicator').innerText = `Step ${step} of 4 • ${mode.toUpperCase()}`;
+            document.getElementById('qTitle').innerText = qData.title;
+            document.getElementById('qDesc').innerText = qData.desc;
 
-            if (step === 1) {
-                title = "Anong Buong Pangalan Mo?";
-                desc = "Ilagay ang pangalan na nakarehistro sa iyong ID o puso.";
-                html = `<input type="text" id="ansVal" placeholder="Juan Dela Cruz" value="${userData.name}">`;
-            } else if (step === 2) {
-                title = "Email Address Mo?";
-                desc = "Dito ipapadala ang encrypted VIP invitation pass.";
-                html = `<input type="email" id="ansVal" placeholder="juan@email.com" value="${userData.email}">`;
-            } else if (step === 3) {
-                title = "Phone / GCash Number?";
-                desc = "Para sa real-time verification at safety tracking.";
-                html = `<input type="tel" id="ansVal" placeholder="0917 123 4567" value="${userData.phone}">`;
-            } else if (step === 4) {
-                title = mode === 'wedding' ? "Anong Ambag Mo sa Kasal?" : "Paano ang Hatian natin sa Date?";
-                desc = "Mag-ingat sa pagsagot para hindi ma-blacklist.";
-                html = `<select id="ansVal">
-                    <option value="">Pili ng tamang sagot...</option>
-                    <option value="fair">50/50 Split & Fair Share</option>
-                    <option value="generous">All-In Generous Supporter</option>
-                </select>`;
-            } else if (step === 5) {
-                title = mode === 'wedding' ? "Magkano ang Sobre / Cash Gift Mo (₱)?" : "Magkano ang Bill Share Mo (₱)?";
-                desc = mode === 'wedding' ? "Minimum expected: ₱1,000" : "Minimum expected: ₱500";
-                html = `<input type="number" id="ansVal" placeholder="Hal. 1500" value="${userData.share || ''}">`;
-                document.getElementById('btnNext').innerText = "Submit & Buksan ang Pass 🎉";
+            let html = '';
+            if (qData.options) {
+                let optionsHtml = `<option value="">${currentLang === 'en' ? 'Select option...' : 'Pumili ng opsyon...'}</option>`;
+                qData.options.forEach(opt => {
+                    optionsHtml += `<option value="${opt.val}">${opt.text}</option>`;
+                });
+                html = `<select id="ansVal">${optionsHtml}</select>`;
             } else {
-                document.getElementById('btnNext').innerText = "Susunod ➔";
+                let val = step === 1 ? inviteDataUser.name : (step === 2 ? inviteDataUser.eventType : '');
+                html = `<input type="${qData.type || 'text'}" id="ansVal" placeholder="${qData.placeholder}" value="${val}">`;
             }
 
-            if(step < 5) document.getElementById('btnNext').innerText = "Susunod ➔";
-
-            document.getElementById('qTitle').innerText = title;
-            document.getElementById('qDesc').innerText = desc;
             document.getElementById('inputContainer').innerHTML = html;
+
+            if (step < 4) {
+                document.getElementById('btnNext').innerText = dict.btnNext;
+            } else {
+                document.getElementById('btnNext').innerText = currentLang === 'en' ? 'Confirm Attendance 🎉' : 'Kumpirmahin ang Pagdalo 🎉';
+            }
         }
 
         function nextStep() {
@@ -474,24 +569,14 @@
             const val = valElem ? valElem.value.trim() : '';
 
             if (!val) {
-                err.innerText = "⚠️ Paki-fill up ang tanong na ito bago tumuloy.";
+                err.innerText = currentLang === 'en' ? "⚠️ Please fill out this field before proceeding." : "⚠️ Paki-fill up muna ang patlang na ito.";
                 return;
             }
 
-            if (step === 1) userData.name = val;
-            if (step === 2) userData.email = val;
-            if (step === 3) userData.phone = val;
+            if (step === 1) inviteDataUser.name = val;
+            if (step === 2) inviteDataUser.eventType = val;
+            if (step === 3) inviteDataUser.seats = val;
             if (step === 4) {
-                if(val === '') { err.innerText = "Pumili ka muna ng sagot!"; return; }
-                userData.q1 = val;
-            }
-            if (step === 5) {
-                let min = mode === 'wedding' ? 1000 : 500;
-                if (parseInt(val) < min) {
-                    err.innerText = `🚫 Lugi Alert! Minimum na halaga ay ₱${min}. Taasan mo pa!`;
-                    return;
-                }
-                userData.share = val;
                 showSuccess();
                 return;
             }
@@ -507,38 +592,17 @@
         function showSuccess() {
             document.getElementById('stepGate').classList.add('hidden');
             
-            const emoji = document.getElementById('successEmoji');
-            const header = document.getElementById('successHeader');
-            const sub = document.getElementById('successSub');
-
-            if (mode === 'wedding') {
-                emoji.innerText = "💒🎉";
-                header.innerText = "Congratulations! You Can Attend the Wedding";
-                sub.innerText = "Opisyal nang tinanggap ang iyong guest pass.";
-                document.getElementById('resEvent').innerText = "Grand Wedding Celebration";
-                document.getElementById('resVenue').innerText = "Glass Garden Pavilion, Tagaytay";
-            } else {
-                emoji.innerText = "🍷✨";
-                header.innerText = "We're Matched! See You on a Date";
-                sub.innerText = "Perfect compatibility. Handa na ang reservation.";
-                document.getElementById('resEvent').innerText = "Exclusive Rooftop Date & Coffee";
-                document.getElementById('resVenue').innerText = "Skyline Lounge, BGC (7:00 PM)";
-            }
-
-            <!-- Dito nagtatapos ang UI / HTML elements mo -->
-            
-    <!-- 1. Dito mo nilagay ang function mo directly sa index.html -->
-    <script>
-        function showSuccess() {
-            document.getElementById('resName').innerText = userData.name;
-            document.getElementById('resShare').innerText = `₱${parseInt(userData.share).toLocaleString()} (Locked)`;
-            document.getElementById('resCode').innerText = 'CRISP-' + Math.random().toString(36).substring(2, 7).toUpperCase();
+            document.getElementById('resName').innerText = inviteDataUser.name;
+            document.getElementById('resEvent').innerText = inviteDataUser.eventType;
+            document.getElementById('resSeats').innerText = inviteDataUser.seats;
+            document.getElementById('resStatus').innerText = currentLang === 'en' ? "Confirmed & Attending" : "Kumpirmado at Dadalo";
+            document.getElementById('resCode').innerText = 'CRISP-INVITE-' + Math.random().toString(36).substring(2, 7).toUpperCase();
             
             document.getElementById('stepPass').classList.remove('hidden');
         }
     </script>
 
-    <!-- 2. Script para ikonekta ang logic mula sa repo.js -->
+    <!-- repo.js integration -->
     <script src="repo.js"></script>
 </body>
 </html>
