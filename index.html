@@ -173,7 +173,7 @@
             backdrop-filter: blur(16px);
             border: 1px solid var(--border);
             border-radius: 20px;
-            padding: 32px;
+            padding: 28px;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
             animation: slideUp 0.5s ease forwards;
         }
@@ -183,6 +183,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* 4-Button Grid for Separate Events */
         .mode-tabs {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -190,7 +191,7 @@
             background: var(--input-bg);
             padding: 6px;
             border-radius: 12px;
-            margin-bottom: 22px;
+            margin-bottom: 20px;
             border: 1px solid var(--border);
         }
 
@@ -198,11 +199,12 @@
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 9px;
+            padding: 10px 8px;
             border-radius: 8px;
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             font-weight: 700;
             cursor: pointer;
+            text-align: center;
         }
 
         .mode-btn.active {
@@ -222,27 +224,27 @@
 
         .question-title {
             font-family: 'Cinzel', serif;
-            font-size: 1.35rem;
+            font-size: 1.25rem;
             color: var(--text-main);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .question-desc {
-            font-size: 0.85rem;
+            font-size: 0.83rem;
             color: var(--text-muted);
-            margin-bottom: 22px;
+            margin-bottom: 18px;
         }
 
-        .form-group { margin-bottom: 18px; }
+        .form-group { margin-bottom: 16px; }
 
         input, select {
             width: 100%;
-            padding: 13px 16px;
+            padding: 12px 14px;
             background: var(--input-bg);
             border: 1px solid var(--border);
             border-radius: 12px;
             color: var(--text-main);
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             outline: none;
         }
 
@@ -256,12 +258,12 @@
 
         .btn-next, .btn-back {
             flex: 1;
-            padding: 13px;
+            padding: 12px;
             border: none;
             border-radius: 12px;
             font-weight: 700;
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
         }
 
         .btn-next {
@@ -279,7 +281,7 @@
         .error-text {
             color: #e11d48;
             font-size: 0.82rem;
-            margin-top: 10px;
+            margin-top: 8px;
             font-weight: 600;
             text-align: center;
         }
@@ -375,16 +377,18 @@
         <div class="env-sub" data-i18n="envSub">Tap wax seal to open your invite envelope</div>
     </div>
 
-    <!-- STEP 2: STEP-BY-STEP SCREENING CARD -->
+    <!-- STEP 2: STEP-BY-STEP SCREENING CARD (SEPARATED EVENT TABS) -->
     <div class="gate-card hidden" id="stepGate">
         <div class="mode-tabs">
-            <button class="mode-btn active" id="tabParty" onclick="switchMode('party')">🎈 Birthday / Baby</button>
-            <button class="mode-btn" id="tabWedding" onclick="switchMode('wedding')">💍 Wedding / Date</button>
+            <button class="mode-btn active" id="tabDate" onclick="switchMode('date')">💖 Date Night</button>
+            <button class="mode-btn" id="tabWedding" onclick="switchMode('wedding')">💍 Wedding</button>
+            <button class="mode-btn" id="tabBirthday" onclick="switchMode('birthday')">🎈 Birthday</button>
+            <button class="mode-btn" id="tabBaby" onclick="switchMode('babyshower')">🍼 Baby Shower</button>
         </div>
 
-        <div class="step-indicator" id="stepIndicator">Step 1 of 4</div>
-        <div class="question-title" id="qTitle">Guest Full Name?</div>
-        <div class="question-desc" id="qDesc">Ilagay ang iyong buong pangalan para sa RSVP pass.</div>
+        <div class="step-indicator" id="stepIndicator">Step 1 of 3</div>
+        <div class="question-title" id="qTitle">Your Full Name?</div>
+        <div class="question-desc" id="qDesc">Ilagay ang iyong pangalan para sa imbitasyon.</div>
 
         <div class="form-group" id="inputContainer">
             <!-- Dynamically injected input per question -->
@@ -407,7 +411,6 @@
         <div class="ticket-box">
             <div class="ticket-row"><span class="t-label" data-i18n="lblGuest">Guest:</span><span class="t-val" id="resName"></span></div>
             <div class="ticket-row"><span class="t-label" data-i18n="lblEvent">Event Type:</span><span class="t-val" id="resEvent"></span></div>
-            <div class="ticket-row"><span class="t-label" data-i18n="lblSeats">Reserved Seats:</span><span class="t-val" id="resSeats"></span></div>
             <div class="ticket-row"><span class="t-label" data-i18n="lblStatus">Status:</span><span class="t-val" style="color: var(--emerald);" id="resStatus"></span></div>
             <div class="ticket-row"><span class="t-label" data-i18n="lblCode">Invitation Pass:</span><span class="t-val" style="color: var(--gold);" id="resCode"></span></div>
         </div>
@@ -416,7 +419,7 @@
     </div>
 
     <script>
-        // Multi-language dictionary
+        // Multi-language dictionary with separated events
         const langData = {
             en: {
                 envPrompt: "SPECIAL INVITATION",
@@ -427,68 +430,76 @@
                 successSub: "Your attendance has been successfully recorded.",
                 lblGuest: "Guest:",
                 lblEvent: "Event Type:",
-                lblSeats: "Reserved Seats:",
                 lblStatus: "Status:",
                 lblCode: "Invitation Pass:",
                 btnSave: "✨ Save Guest Invite Pass",
-                stepsParty: [
-                    { title: "Guest Full Name?", desc: "Enter your full name for the guest list.", placeholder: "Alex Santos" },
-                    { title: "Event Celebration Type?", desc: "Select which joyous occasion you are attending.", options: [
-                        {val: "Kids Birthday Party", text: "Kids Birthday Party 🎈"},
-                        {val: "Baby Shower Celebration", text: "Baby Shower Celebration 🍼"}
-                    ]},
-                    { title: "Number of Attending Guests?", desc: "How many people are coming with you?", placeholder: "Hal. 2 Adults, 1 Kid" },
-                    { title: "Special Dietary / Notes?", desc: "Any allergies or gift messages?", placeholder: "None / Best wishes!" }
+                stepsDate: [
+                    { title: "Your Full Name?", desc: "Enter your name for the romantic date invitation.", placeholder: "Romeo" },
+                    { title: "Preferred Date & Time?", desc: "When are we going out?", placeholder: "Friday, 7:00 PM" },
+                    { title: "Cuisine or Activity Choice?", desc: "What kind of date do you prefer?", placeholder: "Italian Dining & Stargazing" }
                 ],
                 stepsWedding: [
-                    { title: "Guest Full Name?", desc: "Enter your name as written on the invitation.", placeholder: "Maria Clara" },
-                    { title: "Ceremony & Date Type?", desc: "Select the formal event you are joining.", options: [
-                        {val: "Wedding Ceremony & Reception", text: "Wedding Ceremony & Reception 💍"},
-                        {val: "Special Romantic Date Night", text: "Special Romantic Date Night 🌹"}
+                    { title: "Guest Full Name?", desc: "Enter your name as written on the wedding invite.", placeholder: "Maria Clara" },
+                    { title: "Will you attend?", desc: "Confirm your presence at the ceremony.", options: [
+                        {val: "Attending Ceremony & Reception", text: "Attending Ceremony & Reception 💍"},
+                        {val: "Virtual Attendee", text: "Virtual Attendee 💻"}
                     ]},
-                    { title: "Table Seating Preference?", desc: "Choose your preferred seating group.", placeholder: "Family / Friends" },
-                    { title: "Confirmation Passcode?", desc: "Enter your RSVP code from the invite.", placeholder: "VIP-2026" }
+                    { title: "Table Seating Group?", desc: "Choose your preferred seating group.", placeholder: "Family / Friends" }
+                ],
+                stepsBirthday: [
+                    { title: "Guest Full Name?", desc: "Enter your name for the birthday party.", placeholder: "Alex Santos" },
+                    { title: "Age/Theme Milestone?", desc: "Which birthday celebration is this?", placeholder: "7th Birthday Party 🎈" },
+                    { title: "Number of Guests?", desc: "How many people are coming with you?", placeholder: "2 Adults, 1 Child" }
+                ],
+                stepsBaby: [
+                    { title: "Guest Full Name?", desc: "Enter your name for the baby shower.", placeholder: "Auntie Sarah" },
+                    { title: "Baby Shower Wish?", desc: "Send a sweet blessing for the baby.", placeholder: "Wishing you a healthy baby!" },
+                    { title: "Brought a Gift?", desc: "Optional gift confirmation.", placeholder: "Diapers / Baby Clothes" }
                 ]
             },
             tl: {
-                envPrompt: "SPECIAL INVITATION",
+                envPrompt: "ESPESYAL NA IMBITASYON",
                 envSub: "I-tap ang wax seal para buksan ang iyong imbitasyon",
                 btnBack: "Bumalik",
                 btnNext: "Susunod ➔",
                 successHeader: "Kumpirmado ang RSVP Mo!",
-                successSub: "Naitala na ang iyong pagdalo sa masayang okasyon.",
+                successSub: "Naitala na ang iyong pagdalo sa espesyal na okasyon.",
                 lblGuest: "Bisita:",
                 lblEvent: "Uri ng Okasyon:",
-                lblSeats: "Bilang ng Upuan:",
                 lblStatus: "Katayuan:",
                 lblCode: "Invitation Pass:",
                 btnSave: "✨ I-save ang Invite Pass",
-                stepsParty: [
-                    { title: "Buong Pangalan ng Bisita?", desc: "Ilagay ang iyong pangalan para sa listahan.", placeholder: "Alex Santos" },
-                    { title: "Uri ng Pagdiriwang?", desc: "Piliin kung saang party ka dadalo.", options: [
-                        {val: "Kids Birthday Party", text: "Birthday Party ng Bata 🎈"},
-                        {val: "Baby Shower Celebration", text: "Baby Shower Celebration 🍼"}
-                    ]},
-                    { title: "Ilan kayong Dadalo?", desc: "Ilan ang kasama mong pumunta?", placeholder: "Hal. 2 Matanda, 1 Bata" },
-                    { title: "May Alerhiya o Mensahe ba?", desc: "Mensahe para sa celebrant o notes.", placeholder: "Wala / Happy Birthday!" }
+                stepsDate: [
+                    { title: "Iyong Buong Pangalan?", desc: "Ilagay ang iyong pangalan para sa date imbitasyon.", placeholder: "Romeo" },
+                    { title: "Gusto mong Petsa at Oras?", desc: "Kailan tayo aalis para mag-date?", placeholder: "Biyernes, 7:00 PM" },
+                    { title: "Anong Klase ng Date?", desc: "Saan mo gustong pumunta o kumain?", placeholder: "Italian Food at Magandang Tanawin" }
                 ],
                 stepsWedding: [
-                    { title: "Buong Pangalan ng Bisita?", desc: "Ilagay ang iyong pangalan ayon sa imbitasyon.", placeholder: "Maria Clara" },
-                    { title: "Uri ng Pormal na Event?", desc: "Piliin ang okasyong iyong dadaluhan.", options: [
-                        {val: "Wedding Ceremony & Reception", text: "Kasal at Pagtanggap (Wedding) 💍"},
-                        {val: "Special Romantic Date Night", text: "Espesyal na Date Night 🌹"}
+                    { title: "Buong Pangalan ng Bisita?", desc: "Ilagay ang pangalan mo ayon sa wedding invite.", placeholder: "Maria Clara" },
+                    { title: "Dadalo ka ba sa Kasal?", desc: "Kumpirmahin ang iyong presensya.", options: [
+                        {val: "Attending Ceremony & Reception", text: "Dadalo sa Seremonya at Reception 💍"},
+                        {val: "Virtual Attendee", text: "Online nalang manonood 💻"}
                     ]},
-                    { title: "Saan mo gustong umupo?", desc: "Piliin ang iyong preferred seating group.", placeholder: "Pamilya / Kaibigan" },
-                    { title: "Confirmation Passcode?", desc: "Ilagay ang RSVP code na nakalagay sa invite.", placeholder: "VIP-2026" }
+                    { title: "Saan gustong umupo?", desc: "Piliin ang iyong seating group.", placeholder: "Pamilya / Kaibigan" }
+                ],
+                stepsBirthday: [
+                    { title: "Buong Pangalan ng Bisita?", desc: "Ilagay ang iyong pangalan para sa birthday.", placeholder: "Alex Santos" },
+                    { title: "Pangalan o Edad ng Celebrant?", desc: "Anong birthday party ito?", placeholder: "7th Birthday Party 🎈" },
+                    { title: "Ilan kayong Dadalo?", desc: "Ilan ang kasama mo?", placeholder: "2 Matanda, 1 Bata" }
+                ],
+                stepsBaby: [
+                    { title: "Buong Pangalan ng Bisita?", desc: "Ilagay ang iyong pangalan para sa baby shower.", placeholder: "Auntie Sarah" },
+                    { title: "Mensahe para kay Baby?", desc: "Mag-iwan ng magandang basbas.", placeholder: "Maging malusog sana si baby!" },
+                    { title: "Regalo para kay Baby?", desc: "Opsyonal na regalo.", placeholder: "Lampin / Damit para kay Baby" }
                 ]
             }
         };
 
         let currentLang = 'en';
         let currentTheme = 'light';
-        let mode = 'party'; // party or wedding
+        let mode = 'date'; // date, wedding, birthday, babyshower
         let step = 1;
-        let inviteDataUser = { name: '', eventType: '', seats: '' };
+        let inviteDataUser = { name: '', detail: '' };
 
         function toggleLang() {
             currentLang = currentLang === 'en' ? 'tl' : 'en';
@@ -521,13 +532,22 @@
             }, 600);
         }
 
-        
         function switchMode(selectedMode) {
             mode = selectedMode;
             step = 1;
-            document.getElementById('tabParty').classList.toggle('active', mode === 'party');
+            document.getElementById('tabDate').classList.toggle('active', mode === 'date');
             document.getElementById('tabWedding').classList.toggle('active', mode === 'wedding');
+            document.getElementById('tabBirthday').classList.toggle('active', mode === 'birthday');
+            document.getElementById('tabBaby').classList.toggle('active', mode === 'babyshower');
             renderQuestion();
+        }
+
+        function getStepsList() {
+            const dict = langData[currentLang];
+            if (mode === 'date') return dict.stepsDate;
+            if (mode === 'wedding') return dict.stepsWedding;
+            if (mode === 'birthday') return dict.stepsBirthday;
+            return dict.stepsBaby;
         }
 
         function renderQuestion() {
@@ -535,10 +555,10 @@
             document.getElementById('btnBack').classList.toggle('hidden', step === 1);
             
             const dict = langData[currentLang];
-            const stepsList = mode === 'party' ? dict.stepsParty : dict.stepsWedding;
+            const stepsList = getStepsList();
             const qData = stepsList[step - 1];
 
-            document.getElementById('stepIndicator').innerText = `Step ${step} of 4 • ${mode.toUpperCase()}`;
+            document.getElementById('stepIndicator').innerText = `Step ${step} of ${stepsList.length} • ${mode.toUpperCase()}`;
             document.getElementById('qTitle').innerText = qData.title;
             document.getElementById('qDesc').innerText = qData.desc;
 
@@ -550,16 +570,16 @@
                 });
                 html = `<select id="ansVal">${optionsHtml}</select>`;
             } else {
-                let val = step === 1 ? inviteDataUser.name : (step === 2 ? inviteDataUser.eventType : '');
-                html = `<input type="${qData.type || 'text'}" id="ansVal" placeholder="${qData.placeholder}" value="${val}">`;
+                let val = step === 1 ? inviteDataUser.name : (step === 2 ? inviteDataUser.detail : '');
+                html = `<input type="text" id="ansVal" placeholder="${qData.placeholder}" value="${val}">`;
             }
 
             document.getElementById('inputContainer').innerHTML = html;
 
-            if (step < 4) {
+            if (step < stepsList.length) {
                 document.getElementById('btnNext').innerText = dict.btnNext;
             } else {
-                document.getElementById('btnNext').innerText = currentLang === 'en' ? 'Confirm Attendance 🎉' : 'Kumpirmahin ang Pagdalo 🎉';
+                document.getElementById('btnNext').innerText = currentLang === 'en' ? 'Confirm RSVP 🎉' : 'Kumpirmahin 🎉';
             }
         }
 
@@ -567,6 +587,7 @@
             const valElem = document.getElementById('ansVal');
             const err = document.getElementById('errorMsg');
             const val = valElem ? valElem.value.trim() : '';
+            const stepsList = getStepsList();
 
             if (!val) {
                 err.innerText = currentLang === 'en' ? "⚠️ Please fill out this field before proceeding." : "⚠️ Paki-fill up muna ang patlang na ito.";
@@ -574,9 +595,9 @@
             }
 
             if (step === 1) inviteDataUser.name = val;
-            if (step === 2) inviteDataUser.eventType = val;
-            if (step === 3) inviteDataUser.seats = val;
-            if (step === 4) {
+            if (step === 2) inviteDataUser.detail = val;
+            
+            if (step >= stepsList.length) {
                 showSuccess();
                 return;
             }
@@ -593,8 +614,13 @@
             document.getElementById('stepGate').classList.add('hidden');
             
             document.getElementById('resName').innerText = inviteDataUser.name;
-            document.getElementById('resEvent').innerText = inviteDataUser.eventType;
-            document.getElementById('resSeats').innerText = inviteDataUser.seats;
+            let eventTitles = {
+                date: currentLang === 'en' ? "Romantic Date Night 💖" : "Espesyal na Date Night 💖",
+                wedding: currentLang === 'en' ? "Wedding Ceremony 💍" : "Kasal at Pagtanggap 💍",
+                birthday: currentLang === 'en' ? "Birthday Party 🎈" : "Birthday Party 🎈",
+                babyshower: currentLang === 'en' ? "Baby Shower 🍼" : "Baby Shower 🍼"
+            };
+            document.getElementById('resEvent').innerText = eventTitles[mode];
             document.getElementById('resStatus').innerText = currentLang === 'en' ? "Confirmed & Attending" : "Kumpirmado at Dadalo";
             document.getElementById('resCode').innerText = 'CRISP-INVITE-' + Math.random().toString(36).substring(2, 7).toUpperCase();
             
