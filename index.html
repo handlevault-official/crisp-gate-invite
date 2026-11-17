@@ -3,632 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crisp Suite — Special Invite Gate</title>
+    <title>Mission Gate — Crisp Suite</title>
+    
+    <!-- PWA Manifest & Theme -->
     <link rel="manifest" href="./manifest.json">
-    <meta name="theme-color" content="#f8fafc">
+    <meta name="theme-color" content="#0b0f19">
+    
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-main: #f1f5f9;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --gold: #d97706;
-            --gold-light: #fbbf24;
-            --rose: #e11d48;
-            --rose-glow: rgba(225, 29, 72, 0.25);
-            --emerald: #059669;
-            --border: rgba(0, 0, 0, 0.1);
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --input-bg: rgba(241, 245, 249, 0.9);
-        }
-
-        [data-theme="dark"] {
-            --bg-main: #07050a;
-            --card-bg: rgba(20, 16, 28, 0.85);
-            --gold: #f59e0b;
-            --gold-light: #fde68a;
-            --rose: #f43f5e;
-            --rose-glow: rgba(244, 63, 94, 0.4);
-            --emerald: #10b981;
-            --border: rgba(255, 255, 255, 0.1);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --input-bg: rgba(7, 5, 10, 0.7);
-        }
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
         body {
-            background: var(--bg-main);
-            color: var(--text-main);
+            background-color: #0b0f19;
+            color: #f8fafc;
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
             padding: 20px;
-            overflow-x: hidden;
+            text-align: center;
         }
 
-        .hidden { display: none !important; }
-
-        /* Top Controls Container */
-        .controls {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 8px;
-            z-index: 100;
+        header {
+            margin-top: 40px;
         }
 
-        .control-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 8px 14px;
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.2rem;
+            color: #00d2ff;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        p.subtitle {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+
+        main {
+            background: rgba(18, 24, 36, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(0, 210, 255, 0.15);
+            color: #00d2ff;
+            padding: 6px 14px;
             border-radius: 999px;
-            cursor: pointer;
             font-size: 0.8rem;
             font-weight: 700;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        /* --- STEP 1: 3D WHITE & GOLD ENVELOPE --- */
-        .envelope-wrapper {
-            perspective: 1000px;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .envelope {
-            position: relative;
-            width: 340px;
-            height: 230px;
-            background: linear-gradient(135deg, #ffffff, #e2e8f0);
-            border: 1px solid rgba(217, 119, 6, 0.4);
-            border-radius: 12px;
-            margin: 0 auto 25px auto;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2), 0 0 30px rgba(251, 191, 36, 0.25);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow: hidden;
-        }
-
-        [data-theme="dark"] .envelope {
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-        }
-
-        .envelope-wrapper:hover .envelope {
-            transform: translateY(-8px) scale(1.02);
-        }
-
-        .flap {
-            position: absolute;
-            top: 0; left: 0; width: 0; height: 0;
-            border-left: 170px solid transparent;
-            border-right: 170px solid transparent;
-            border-top: 130px solid #cbd5e1;
-            transform-origin: top;
-            transition: transform 0.6s ease;
-            z-index: 3;
-        }
-
-        [data-theme="dark"] .flap {
-            border-top-color: #334155;
-        }
-
-        .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
-
-        .pocket {
-            position: absolute; bottom: 0; left: 0; width: 0; height: 0;
-            border-left: 170px solid #ffffff;
-            border-right: 170px solid #ffffff;
-            border-bottom: 115px solid #cbd5e1;
-            border-top: 115px solid transparent;
-            z-index: 2;
-        }
-
-        [data-theme="dark"] .pocket {
-            border-left-color: #1e293b;
-            border-right-color: #1e293b;
-            border-bottom-color: #334155;
-        }
-
-        .wax-seal {
-            position: absolute; top: 95px; left: 50%;
-            transform: translateX(-50%);
-            width: 68px; height: 68px;
-            background: radial-gradient(circle at 30% 30%, #fbbf24, #d97706);
-            border: 2px solid #fff;
-            border-radius: 50%;
-            z-index: 4;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 28px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        .envelope.open .wax-seal { opacity: 0; transform: translateX(-50%) scale(0.5); }
-
-        .env-prompt {
-            font-family: 'Cinzel', serif;
-            font-size: 1.4rem;
-            color: var(--gold);
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-        }
-
-        .env-sub { font-size: 0.85rem; color: var(--text-muted); }
-
-        /* --- STEP 2: GATE CARD --- */
-        .gate-card {
-            width: 100%;
-            max-width: 480px;
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 28px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-            animation: slideUp 0.5s ease forwards;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(25px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* 4-Button Grid for Separate Events */
-        .mode-tabs {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            background: var(--input-bg);
-            padding: 6px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
-        }
-
-        .mode-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 10px 8px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .mode-btn.active {
-            background: linear-gradient(135deg, var(--gold), var(--rose));
-            color: #fff;
-            box-shadow: 0 4px 12px var(--rose-glow);
-        }
-
-        .step-indicator {
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: var(--gold);
-            letter-spacing: 1.5px;
             text-transform: uppercase;
-            margin-bottom: 6px;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
         }
 
-        .question-title {
-            font-family: 'Cinzel', serif;
-            font-size: 1.25rem;
-            color: var(--text-main);
-            margin-bottom: 6px;
+        .description {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
         }
 
-        .question-desc {
-            font-size: 0.83rem;
-            color: var(--text-muted);
-            margin-bottom: 18px;
-        }
-
-        .form-group { margin-bottom: 16px; }
-
-        input, select {
+        .btn-access {
+            display: inline-block;
             width: 100%;
-            padding: 12px 14px;
-            background: var(--input-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: var(--text-main);
-            font-size: 0.92rem;
-            outline: none;
-        }
-
-        input:focus, select:focus { border-color: var(--gold); }
-
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .btn-next, .btn-back {
-            flex: 1;
-            padding: 12px;
-            border: none;
+            padding: 14px;
+            background: linear-gradient(135deg, #00d2ff, #0072ff);
+            color: #fff;
+            text-decoration: none;
             border-radius: 12px;
             font-weight: 700;
-            cursor: pointer;
-            font-size: 0.92rem;
+            font-size: 1rem;
+            box-shadow: 0 8px 20px rgba(0, 210, 255, 0.25);
+            transition: opacity 0.2s, transform 0.2s;
         }
 
-        .btn-next {
-            background: linear-gradient(135deg, var(--gold), var(--rose));
-            color: #fff;
-            box-shadow: 0 8px 20px var(--rose-glow);
+        .btn-access:hover {
+            opacity: 0.95;
+            transform: translateY(-2px);
         }
 
-        .btn-back {
-            background: var(--input-bg);
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-        }
-
-        .error-text {
-            color: #e11d48;
-            font-size: 0.82rem;
-            margin-top: 8px;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        /* --- STEP 3: SUCCESS PASS --- */
-        .vip-pass {
-            width: 100%;
-            max-width: 460px;
-            background: var(--card-bg);
-            border: 2px solid var(--gold);
-            border-radius: 24px;
-            padding: 32px;
-            box-shadow: 0 25px 60px rgba(217, 119, 6, 0.2);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-
-        @keyframes bounceIn {
-            0% { opacity: 0; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        .success-icon {
-            font-size: 55px;
-            margin-bottom: 12px;
-            animation: pulseIcon 1.5s infinite;
-        }
-
-        @keyframes pulseIcon {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-        }
-
-        .vip-pass h2 {
-            font-family: 'Cinzel', serif;
-            font-size: 1.5rem;
-            color: var(--gold);
-            margin-bottom: 6px;
-        }
-
-        .ticket-box {
-            background: var(--input-bg);
-            border: 1px dashed var(--border);
-            border-radius: 14px;
-            padding: 18px;
-            margin: 20px 0;
-            text-align: left;
-            font-size: 0.88rem;
-        }
-
-        .ticket-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 7px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .ticket-row:last-child { border-bottom: none; }
-        .t-label { color: var(--text-muted); }
-        .t-val { font-weight: 700; color: var(--text-main); text-align: right; }
-
-        .btn-action {
-            width: 100%;
-            padding: 13px;
-            background: linear-gradient(135deg, var(--gold), var(--rose));
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 0.95rem;
-            cursor: pointer;
-            box-shadow: 0 8px 20px rgba(217, 119, 6, 0.3);
+        footer {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 10px;
         }
     </style>
 </head>
-<body data-theme="light">
+<body>
 
-    <div class="controls">
-        <button class="control-btn" onclick="toggleLang()" id="langBtn">🇵🇭 Tagalog</button>
-        <button class="control-btn" onclick="toggleTheme()">☀️ / 🌙</button>
-    </div>
+    <header>
+        <h1>Mission Gate</h1>
+        <p class="subtitle">Crisp Suite / HandleVault Official</p>
+    </header>
 
-    <!-- STEP 1: 3D WHITE & GOLD ENVELOPE -->
-    <div class="envelope-wrapper" id="stepEnvelope" onclick="openEnvelope()">
-        <div class="envelope" id="envelopeObj">
-            <div class="flap"></div>
-            <div class="pocket"></div>
-            <div class="wax-seal">💌</div>
-        </div>
-        <div class="env-prompt" data-i18n="envPrompt">SPECIAL INVITATION</div>
-        <div class="env-sub" data-i18n="envSub">Tap wax seal to open your invite envelope</div>
-    </div>
+    <main>
+        <div class="badge">Special Access Portal</div>
+        <p class="description">Welcome to the secure gateway of the Crisp Suite ecosystem. Your device is configured for a seamless, installable PWA experience.</p>
+        
+        <a href="#" class="btn-access" onclick="alert('Access Portal Ready!')">Enter Portal 🚀</a>
+    </main>
 
-    <!-- STEP 2: STEP-BY-STEP SCREENING CARD (SEPARATED EVENT TABS) -->
-    <div class="gate-card hidden" id="stepGate">
-        <div class="mode-tabs">
-            <button class="mode-btn active" id="tabDate" onclick="switchMode('date')">💖 Date Night</button>
-            <button class="mode-btn" id="tabWedding" onclick="switchMode('wedding')">💍 Wedding</button>
-            <button class="mode-btn" id="tabBirthday" onclick="switchMode('birthday')">🎈 Birthday</button>
-            <button class="mode-btn" id="tabBaby" onclick="switchMode('babyshower')">🍼 Baby Shower</button>
-        </div>
+    <footer>
+        <p>&copy; 2026 Crisp Suite / HandleVault Official. All rights reserved.</p>
+    </footer>
 
-        <div class="step-indicator" id="stepIndicator">Step 1 of 3</div>
-        <div class="question-title" id="qTitle">Your Full Name?</div>
-        <div class="question-desc" id="qDesc">Ilagay ang iyong pangalan para sa imbitasyon.</div>
-
-        <div class="form-group" id="inputContainer">
-            <!-- Dynamically injected input per question -->
-        </div>
-
-        <div class="error-text" id="errorMsg"></div>
-
-        <div class="btn-group">
-            <button class="btn-back hidden" id="btnBack" onclick="prevStep()" data-i18n="btnBack">Back</button>
-            <button class="btn-next" id="btnNext" onclick="nextStep()" data-i18n="btnNext">Next ➔</button>
-        </div>
-    </div>
-
-    <!-- STEP 3: SUCCESS PASS -->
-    <div class="vip-pass hidden" id="stepPass">
-        <div class="success-icon">🎟️</div>
-        <h2 data-i18n="successHeader">RSVP Confirmed!</h2>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;" data-i18n="successSub">Naitala na ang iyong pagdalo sa okasyon.</p>
-
-        <div class="ticket-box">
-            <div class="ticket-row"><span class="t-label" data-i18n="lblGuest">Guest:</span><span class="t-val" id="resName"></span></div>
-            <div class="ticket-row"><span class="t-label" data-i18n="lblEvent">Event Type:</span><span class="t-val" id="resEvent"></span></div>
-            <div class="ticket-row"><span class="t-label" data-i18n="lblStatus">Status:</span><span class="t-val" style="color: var(--emerald);" id="resStatus"></span></div>
-            <div class="ticket-row"><span class="t-label" data-i18n="lblCode">Invitation Pass:</span><span class="t-val" style="color: var(--gold);" id="resCode"></span></div>
-        </div>
-
-        <button class="btn-action" onclick="alert('✅ Invitation Pass saved successfully!')" data-i18n="btnSave">✨ Save Guest Invite Pass</button>
-    </div>
-
+    <!-- PWA Service Worker Registration -->
     <script>
-        // Multi-language dictionary with separated events
-        const langData = {
-            en: {
-                envPrompt: "SPECIAL INVITATION",
-                envSub: "Tap wax seal to open your invite envelope",
-                btnBack: "Back",
-                btnNext: "Next ➔",
-                successHeader: "RSVP Confirmed!",
-                successSub: "Your attendance has been successfully recorded.",
-                lblGuest: "Guest:",
-                lblEvent: "Event Type:",
-                lblStatus: "Status:",
-                lblCode: "Invitation Pass:",
-                btnSave: "✨ Save Guest Invite Pass",
-                stepsDate: [
-                    { title: "Your Full Name?", desc: "Enter your name for the romantic date invitation.", placeholder: "Romeo" },
-                    { title: "Preferred Date & Time?", desc: "When are we going out?", placeholder: "Friday, 7:00 PM" },
-                    { title: "Cuisine or Activity Choice?", desc: "What kind of date do you prefer?", placeholder: "Italian Dining & Stargazing" }
-                ],
-                stepsWedding: [
-                    { title: "Guest Full Name?", desc: "Enter your name as written on the wedding invite.", placeholder: "Maria Clara" },
-                    { title: "Will you attend?", desc: "Confirm your presence at the ceremony.", options: [
-                        {val: "Attending Ceremony & Reception", text: "Attending Ceremony & Reception 💍"},
-                        {val: "Virtual Attendee", text: "Virtual Attendee 💻"}
-                    ]},
-                    { title: "Table Seating Group?", desc: "Choose your preferred seating group.", placeholder: "Family / Friends" }
-                ],
-                stepsBirthday: [
-                    { title: "Guest Full Name?", desc: "Enter your name for the birthday party.", placeholder: "Alex Santos" },
-                    { title: "Age/Theme Milestone?", desc: "Which birthday celebration is this?", placeholder: "7th Birthday Party 🎈" },
-                    { title: "Number of Guests?", desc: "How many people are coming with you?", placeholder: "2 Adults, 1 Child" }
-                ],
-                stepsBaby: [
-                    { title: "Guest Full Name?", desc: "Enter your name for the baby shower.", placeholder: "Auntie Sarah" },
-                    { title: "Baby Shower Wish?", desc: "Send a sweet blessing for the baby.", placeholder: "Wishing you a healthy baby!" },
-                    { title: "Brought a Gift?", desc: "Optional gift confirmation.", placeholder: "Diapers / Baby Clothes" }
-                ]
-            },
-            tl: {
-                envPrompt: "ESPESYAL NA IMBITASYON",
-                envSub: "I-tap ang wax seal para buksan ang iyong imbitasyon",
-                btnBack: "Bumalik",
-                btnNext: "Susunod ➔",
-                successHeader: "Kumpirmado ang RSVP Mo!",
-                successSub: "Naitala na ang iyong pagdalo sa espesyal na okasyon.",
-                lblGuest: "Bisita:",
-                lblEvent: "Uri ng Okasyon:",
-                lblStatus: "Katayuan:",
-                lblCode: "Invitation Pass:",
-                btnSave: "✨ I-save ang Invite Pass",
-                stepsDate: [
-                    { title: "Iyong Buong Pangalan?", desc: "Ilagay ang iyong pangalan para sa date imbitasyon.", placeholder: "Romeo" },
-                    { title: "Gusto mong Petsa at Oras?", desc: "Kailan tayo aalis para mag-date?", placeholder: "Biyernes, 7:00 PM" },
-                    { title: "Anong Klase ng Date?", desc: "Saan mo gustong pumunta o kumain?", placeholder: "Italian Food at Magandang Tanawin" }
-                ],
-                stepsWedding: [
-                    { title: "Buong Pangalan ng Bisita?", desc: "Ilagay ang pangalan mo ayon sa wedding invite.", placeholder: "Maria Clara" },
-                    { title: "Dadalo ka ba sa Kasal?", desc: "Kumpirmahin ang iyong presensya.", options: [
-                        {val: "Attending Ceremony & Reception", text: "Dadalo sa Seremonya at Reception 💍"},
-                        {val: "Virtual Attendee", text: "Online nalang manonood 💻"}
-                    ]},
-                    { title: "Saan gustong umupo?", desc: "Piliin ang iyong seating group.", placeholder: "Pamilya / Kaibigan" }
-                ],
-                stepsBirthday: [
-                    { title: "Buong Pangalan ng Bisita?", desc: "Ilagay ang iyong pangalan para sa birthday.", placeholder: "Alex Santos" },
-                    { title: "Pangalan o Edad ng Celebrant?", desc: "Anong birthday party ito?", placeholder: "7th Birthday Party 🎈" },
-                    { title: "Ilan kayong Dadalo?", desc: "Ilan ang kasama mo?", placeholder: "2 Matanda, 1 Bata" }
-                ],
-                stepsBaby: [
-                    { title: "Buong Pangalan ng Bisita?", desc: "Ilagay ang iyong pangalan para sa baby shower.", placeholder: "Auntie Sarah" },
-                    { title: "Mensahe para kay Baby?", desc: "Mag-iwan ng magandang basbas.", placeholder: "Maging malusog sana si baby!" },
-                    { title: "Regalo para kay Baby?", desc: "Opsyonal na regalo.", placeholder: "Lampin / Damit para kay Baby" }
-                ]
-            }
-        };
-
-        let currentLang = 'en';
-        let currentTheme = 'light';
-        let mode = 'date'; // date, wedding, birthday, babyshower
-        let step = 1;
-        let inviteDataUser = { name: '', detail: '' };
-
-        function toggleLang() {
-            currentLang = currentLang === 'en' ? 'tl' : 'en';
-            document.getElementById('langBtn').innerText = currentLang === 'en' ? '🇵🇭 Tagalog' : '🇬🇧 English';
-            updateStaticText();
-            if (document.getElementById('stepGate').classList.contains('hidden') === false) {
-                renderQuestion();
-            }
-        }
-
-        function toggleTheme() {
-            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-            document.body.setAttribute('data-theme', currentTheme);
-        }
-
-        function updateStaticText() {
-            const dict = langData[currentLang];
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (dict[key]) el.innerText = dict[key];
-            });
-        }
-
-        function openEnvelope() {
-            document.getElementById('envelopeObj').classList.add('open');
-            setTimeout(() => {
-                document.getElementById('stepEnvelope').classList.add('hidden');
-                document.getElementById('stepGate').classList.remove('hidden');
-                renderQuestion();
-            }, 600);
-        }
-
-        function switchMode(selectedMode) {
-            mode = selectedMode;
-            step = 1;
-            document.getElementById('tabDate').classList.toggle('active', mode === 'date');
-            document.getElementById('tabWedding').classList.toggle('active', mode === 'wedding');
-            document.getElementById('tabBirthday').classList.toggle('active', mode === 'birthday');
-            document.getElementById('tabBaby').classList.toggle('active', mode === 'babyshower');
-            renderQuestion();
-        }
-
-        function getStepsList() {
-            const dict = langData[currentLang];
-            if (mode === 'date') return dict.stepsDate;
-            if (mode === 'wedding') return dict.stepsWedding;
-            if (mode === 'birthday') return dict.stepsBirthday;
-            return dict.stepsBaby;
-        }
-
-        function renderQuestion() {
-            document.getElementById('errorMsg').innerText = '';
-            document.getElementById('btnBack').classList.toggle('hidden', step === 1);
-            
-            const dict = langData[currentLang];
-            const stepsList = getStepsList();
-            const qData = stepsList[step - 1];
-
-            document.getElementById('stepIndicator').innerText = `Step ${step} of ${stepsList.length} • ${mode.toUpperCase()}`;
-            document.getElementById('qTitle').innerText = qData.title;
-            document.getElementById('qDesc').innerText = qData.desc;
-
-            let html = '';
-            if (qData.options) {
-                let optionsHtml = `<option value="">${currentLang === 'en' ? 'Select option...' : 'Pumili ng opsyon...'}</option>`;
-                qData.options.forEach(opt => {
-                    optionsHtml += `<option value="${opt.val}">${opt.text}</option>`;
-                });
-                html = `<select id="ansVal">${optionsHtml}</select>`;
-            } else {
-                let val = step === 1 ? inviteDataUser.name : (step === 2 ? inviteDataUser.detail : '');
-                html = `<input type="text" id="ansVal" placeholder="${qData.placeholder}" value="${val}">`;
-            }
-
-            document.getElementById('inputContainer').innerHTML = html;
-
-            if (step < stepsList.length) {
-                document.getElementById('btnNext').innerText = dict.btnNext;
-            } else {
-                document.getElementById('btnNext').innerText = currentLang === 'en' ? 'Confirm RSVP 🎉' : 'Kumpirmahin 🎉';
-            }
-        }
-
-        function nextStep() {
-            const valElem = document.getElementById('ansVal');
-            const err = document.getElementById('errorMsg');
-            const val = valElem ? valElem.value.trim() : '';
-            const stepsList = getStepsList();
-
-            if (!val) {
-                err.innerText = currentLang === 'en' ? "⚠️ Please fill out this field before proceeding." : "⚠️ Paki-fill up muna ang patlang na ito.";
-                return;
-            }
-
-            if (step === 1) inviteDataUser.name = val;
-            if (step === 2) inviteDataUser.detail = val;
-            
-            if (step >= stepsList.length) {
-                showSuccess();
-                return;
-            }
-
-            step++;
-            renderQuestion();
-        }
-
-        function prevStep() {
-            if (step > 1) { step--; renderQuestion(); }
-        }
-
-        function showSuccess() {
-            document.getElementById('stepGate').classList.add('hidden');
-            
-            document.getElementById('resName').innerText = inviteDataUser.name;
-            let eventTitles = {
-                date: currentLang === 'en' ? "Romantic Date Night 💖" : "Espesyal na Date Night 💖",
-                wedding: currentLang === 'en' ? "Wedding Ceremony 💍" : "Kasal at Pagtanggap 💍",
-                birthday: currentLang === 'en' ? "Birthday Party 🎈" : "Birthday Party 🎈",
-                babyshower: currentLang === 'en' ? "Baby Shower 🍼" : "Baby Shower 🍼"
-            };
-            document.getElementById('resEvent').innerText = eventTitles[mode];
-            document.getElementById('resStatus').innerText = currentLang === 'en' ? "Confirmed & Attending" : "Kumpirmado at Dadalo";
-            document.getElementById('resCode').innerText = 'CRISP-INVITE-' + Math.random().toString(36).substring(2, 7).toUpperCase();
-            
-            document.getElementById('stepPass').classList.remove('hidden');
-        }
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then((reg) => console.log('Service Worker registered! Scope:', reg.scope))
+            .catch((err) => console.log('Service Worker registration failed:', err));
+        });
+      }
     </script>
 
-    <!-- repo.js integration -->
+    <!-- Repository Integration Script -->
     <script src="repo.js"></script>
 </body>
 </html>
